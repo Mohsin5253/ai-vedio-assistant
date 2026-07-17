@@ -1,31 +1,26 @@
-import yt_dlp
+from pytubefix import YouTube
+from pytubefix.cli import on_progress
 from pydub import AudioSegment
 import os
 
 DOWNLOAD_DIR = 'downloads'
 os.makedirs(DOWNLOAD_DIR,exist_ok = True)
 
-def download_youtube_audio(url :str) ->str:
-    output_path = os.path.join(DOWNLOAD_DIR, "%(title)s.%(ext)s")
-    ydl_opts = {
-        "format": "m4a/bestaudio/best",
-        "outtmpl": output_path,
-        "postprocessors": [
-            {
-                "key": "FFmpegExtractAudio",
-                "preferredcodec": "wav",
-                "preferredquality": "192",
-            }
-        ],
-        "extractor_args": {
-            "youtube": ["player_client=ios,android,web"]
-        },
-        "quiet": True,
-    }
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(url, download=True)
-        filename = ydl.prepare_filename(info).replace(".webm", ".wav").replace(".m4a", ".wav")
-    return filename
+def download_youtube_audio(url: str) -> str:
+    yt = YouTube(url, use_po_token=True)
+    stream = yt.streams.get_audio_only()
+    
+    # Download the raw audio file
+    raw_path = stream.download(output_path=DOWNLOAD_DIR, filename_prefix="yt_raw_")
+    
+    # Convert it to WAV using the existing pydub convert function
+    wav_path = convert_to_wav(raw_path)
+    
+    # Clean up the raw download
+    if os.path.exists(raw_path):
+        os.remove(raw_path)
+        
+    return wav_path
 
 
 
