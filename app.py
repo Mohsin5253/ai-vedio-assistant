@@ -322,6 +322,27 @@ hr {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ── Empty State ── */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 2rem;
+    text-align: center;
+}
+
+/* ── Mobile Responsive ── */
+@media (max-width: 768px) {
+    .card { padding: 1rem !important; }
+    .chat-bubble { max-width: 100% !important; padding: 0.85rem 1rem !important; font-size: 0.9rem !important; }
+    .empty-state { padding: 3rem 1rem !important; }
+    .hero-title { font-size: clamp(2rem, 8vw, 3rem) !important; }
+    .hero-sub { font-size: 0.75rem !important; }
+    .transcript-box { padding: 1rem !important; max-height: 250px !important; }
+    [data-testid="stSidebar"] { min-width: 100vw !important; } /* Make sidebar full width on mobile */
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -598,7 +619,7 @@ if st.session_state.result:
 else:
     # Empty state
     st.markdown("""
-    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6rem 2rem;text-align:center">
+    <div class="empty-state">
         <div style="font-size:5rem;margin-bottom:1rem;text-shadow: 0 0 20px rgba(124,58,237,0.5);">🎬</div>
         <div class="hero-title" style="font-size: 2.5rem; margin-bottom:1rem">
             Ready to Analyse
