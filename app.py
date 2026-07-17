@@ -73,6 +73,11 @@ html, body, [class*="css"] {
 }
 
 
+/* ── Hide Streamlit Header ── */
+[data-testid="stHeader"] {
+    display: none !important;
+}
+
 /* ── Sidebar ── */
 [data-testid="stSidebar"] {
     background: var(--surface) !important;
