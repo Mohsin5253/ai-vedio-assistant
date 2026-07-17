@@ -8,7 +8,7 @@ os.makedirs(DOWNLOAD_DIR,exist_ok = True)
 def download_youtube_audio(url :str) ->str:
     output_path = os.path.join(DOWNLOAD_DIR, "%(title)s.%(ext)s")
     ydl_opts = {
-        "format": "bestaudio/best",
+        "format": "m4a/bestaudio/best",
         "outtmpl": output_path,
         "postprocessors": [
             {
@@ -17,6 +17,9 @@ def download_youtube_audio(url :str) ->str:
                 "preferredquality": "192",
             }
         ],
+        "extractor_args": {
+            "youtube": ["player_client=ios,android,web"]
+        },
         "quiet": True,
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
