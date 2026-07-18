@@ -27,7 +27,7 @@ def get_db_engine():
         # Use postgresql (ensure URL starts with postgresql:// not postgres:// for SQLAlchemy)
         if database_url.startswith("postgres://"):
             database_url = database_url.replace("postgres://", "postgresql://", 1)
-        engine = create_engine(database_url)
+        engine = create_engine(database_url, pool_pre_ping=True, pool_recycle=300)
     else:
         # Default to SQLite
         engine = create_engine("sqlite:///app_database.db", connect_args={"check_same_thread": False})

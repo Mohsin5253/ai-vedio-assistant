@@ -23,6 +23,7 @@ def download_youtube_audio(url :str) ->str:
         "ignoreerrors": False,
         "no_warnings": True,
         "concurrent_fragment_downloads": 5,
+        "extractor_args": {"youtube": {"player_client": ["android", "web"]}},
     }
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
