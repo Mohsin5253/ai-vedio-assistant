@@ -18,11 +18,21 @@ def download_youtube_audio(url :str) ->str:
             }
         ],
         "quiet": True,
+        "noplaylist": True,
+        "nocheckcertificate": True,
+        "ignoreerrors": False,
+        "no_warnings": True,
+        "concurrent_fragment_downloads": 5,
     }
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(url, download=True)
-        filename = ydl.prepare_filename(info).replace(".webm", ".wav").replace(".m4a", ".wav")
-    return filename
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(url, download=True)
+            # Safely replace the original extension with .wav
+            base_filename = os.path.splitext(ydl.prepare_filename(info))[0]
+            filename = base_filename + ".wav"
+        return filename
+    except Exception as e:
+        raise Exception(f"Failed to download YouTube audio: {str(e)}")
 
 
 
