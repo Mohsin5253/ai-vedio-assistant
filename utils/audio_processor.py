@@ -1,37 +1,19 @@
-import yt_dlp
-from pydub import AudioSegment
 import os
+from pytubefix import YouTube
+from pydub import AudioSegment
 
 DOWNLOAD_DIR = 'downloades'
 os.makedirs(DOWNLOAD_DIR,exist_ok = True)
 
 def download_youtube_audio(url :str) ->str:
-    output_path = os.path.join(DOWNLOAD_DIR, "%(title)s.%(ext)s")
-    ydl_opts = {
-        "format": "bestaudio/best",
-        "outtmpl": output_path,
-        "postprocessors": [
-            {
-                "key": "FFmpegExtractAudio",
-                "preferredcodec": "wav",
-                "preferredquality": "192",
-            }
-        ],
-        "quiet": True,
-        "noplaylist": True,
-        "nocheckcertificate": True,
-        "ignoreerrors": False,
-        "no_warnings": True,
-        "concurrent_fragment_downloads": 5,
-        "extractor_args": {"youtube": {"player_client": ["android", "web"]}},
-    }
     try:
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(url, download=True)
-            # Safely replace the original extension with .wav
-            base_filename = os.path.splitext(ydl.prepare_filename(info))[0]
-            filename = base_filename + ".wav"
-        return filename
+        # Use pytubefix with Android client to bypass 403
+        yt = YouTube(url, client='ANDROID')
+        audio_stream = yt.streams.get_audio_only()
+        downloaded_file = audio_stream.download(output_path=DOWNLOAD_DIR)
+        
+        # Convert the downloaded file to wav using the existing convert_to_wav function
+        return convert_to_wav(downloaded_file)
     except Exception as e:
         raise Exception(f"Failed to download YouTube audio: {str(e)}")
 
